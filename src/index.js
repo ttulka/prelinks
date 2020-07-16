@@ -2,7 +2,7 @@ import PreLinks from './prelinks.js';
 import PageLoader from './loader.js';
 import LinksHistory from './history.js';
 
-(function () {    
+(function () {
     const history = new LinksHistory(
         window, 
         window.history);
