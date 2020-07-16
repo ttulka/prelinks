@@ -16,7 +16,7 @@ export default class PageLoader {
 
             this.loading.delete(link);
 
-            console.debug('Loaded', link, html.querySelector('head title'), html.qu);
+            console.debug('Loaded', link);
         }
     }
     async show(link) {
@@ -25,22 +25,21 @@ export default class PageLoader {
         }
         const page = this.pages.get(link).cloneNode(true);
         const body = page.querySelector('body');
-        const title = page.querySelector('head title');
+        const head = page.querySelector('head');
 
-        if (body) {
-            const pageBody = this.document.querySelector('body');
-            pageBody.innerHTML = body.innerHTML;
-            this.document.querySelector('head title').innerText = (title && title.innerText) || '';
+        this.document.querySelector('head').innerHTML = head.innerHTML;
+            
+        const pageBody = this.document.querySelector('body');
+        pageBody.innerHTML = body.innerHTML;
 
-            pageBody.querySelectorAll('script').forEach(s => s.parentNode.replaceChild(this._scriptElement(s), s));
+        pageBody.querySelectorAll('script').forEach(s => s.parentNode.replaceChild(this._scriptElement(s), s));
 
-            console.debug('Shown', link, title);
-        }
+        console.debug('Shown', link);
     }
     add(link, document) {
         if (!this.pages.has(link)) {
             this.pages.set(link, document.cloneNode(true));
-            console.debug('Loaded', link, document.querySelector('head title'));
+            console.debug('Loaded', link);
         }
     }
     _scriptElement(element) {
