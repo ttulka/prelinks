@@ -9,9 +9,16 @@ That results in a very quick navigating among pages, lower load, and great user 
 Put the script to the bottom of `<body>` into each HTML page:
 
 ```html
-<script src="../src/index.js" type="module" id="prelinks"></script>
+<script src="prelinks.min.js" type="module" id="prelinks"></script>
 ```
 
-That's all!
-
 ## Demo
+
+https://ttulka.github.io/prelinks/index.html
+
+## Build
+
+```
+npm i
+./node_modules/.bin/rollup -c
+```

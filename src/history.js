@@ -8,14 +8,13 @@ export default class LinksHistory extends EventTarget {
     }
     start(url) {
         this.history.replaceState(url, url, url);
-        
+
         window.addEventListener('popstate', this._onPopstateEvent);
     }
     stop() {
         window.removeEventListener('popstate', this._onPopstateEvent);
     }
     _onPopstateEvent(e) {
-        console.debug('popstate', e);
         if (e.state) {
             this.dispatchEvent(new CustomEvent('popped', { detail: e.state }));
         }
