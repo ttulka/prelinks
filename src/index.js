@@ -4,15 +4,18 @@ import LinksHistory from './history.js';
 
 (function () {
     const history = new LinksHistory(
-        window, 
+        window,
         window.history);
     const prelinks = new PreLinks(
-        window.document, 
+        window.document,
         new PageLoader(window.document),
         history);
-    
-    prelinks.init(window.location.href);
-    history.start();
 
-    // TODO call prelinks.destroy() and history.stop() when document unmounts
+    prelinks.init(window.location.href);
+    history.start(window.location.href);
+
+    window.addEventListener('unload', e => {
+        prelinks.destroy();
+        history.stop();
+    });
 })();

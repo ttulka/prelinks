@@ -22,8 +22,6 @@ export default class PreLinks {
         
         this.loader.add(currentUrl, this.document);
                 
-        // TODO watch document for dynamically added anchors
-        
         console.debug('Prelinks initialized.')
     }
     destroy() {        
