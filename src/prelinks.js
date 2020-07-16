@@ -9,7 +9,7 @@ export default class PreLinks {
         this._onMouseenterEvent = this._onMouseenterEvent.bind(this);
         this._onHistoryPoppedEvent = this._onHistoryPoppedEvent.bind(this);
         
-        console.log('PreLinks constructed.')
+        console.debug('PreLinks constructed.');
     }
     init(currentUrl) {
         document.querySelectorAll('a').forEach(a => {
@@ -22,7 +22,7 @@ export default class PreLinks {
         
         this.loader.add(currentUrl, this.document);
                 
-        console.debug('Prelinks initialized.')
+        console.debug('Prelinks initialized.');
     }
     destroy() {        
         this.anchors.forEach(a => {
@@ -32,7 +32,7 @@ export default class PreLinks {
 
         this.history.removeEventListener('popped', this._onHistoryPoppedEvent);
 
-        console.debug('Prelinks destroyed.')
+        console.debug('Prelinks destroyed.');
     }
     _showLink(link) {
         this.loader.show(link)
@@ -50,7 +50,7 @@ export default class PreLinks {
         e.preventDefault();
         const link = e.target.href;
         if (link) {            
-            console.log('Link clicked', link);
+            console.debug('Link clicked', link);
             this.history.push(link);
             this._showLink(link);
         }
@@ -58,14 +58,14 @@ export default class PreLinks {
     _onMouseenterEvent(e) {
         const link = e.target.href;
         if (link) {
-            console.log('Link entered', link);
+            console.debug('Link entered', link);
             this._loadLink(link);
         }
     }
     _onHistoryPoppedEvent(e) {
         const link = e.detail;
         if (link) {
-            console.log('Link popped', link);
+            console.debug('Link popped', link);
             this._showLink(link);     
         }
     }
