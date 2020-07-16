@@ -1,2 +1,2 @@
-# prelinks
-Pre-cached links.
+# Prelinks - cached even before clicked!
+
