@@ -1,28 +1,41 @@
-export default class Loader {
-    constructor(document, loader, history) {
+export default class PageLoader {
+    constructor(document, history) {
         this.document = document;
         this.pages = new Map();
         this.loading = new Set();
+        console.debug('PageLoader constructed.');
     }
-    async load(href) {
-        if (!this.loading.has(href) && !this.pages.has(href)) {
-            this.loading.add(href);
+    async load(link) {
+        if (!this.loading.has(link) && !this.pages.has(link)) {
+            this.loading.add(link);
             
-            const html = await fetch(href)
+            const html = await fetch(link)
                 .then(r => r.text())
                 .then(r => new DOMParser().parseFromString(r, 'text/html'));
-            this.pages.set(href, html);            
+            this.pages.set(link, html);            
             
-            this.loading.delete(href);
-            console.debug('Loaded', href);
+            this.loading.delete(link);
+
+            console.debug('Loaded', link, html.querySelector('head title'));
         }
     }
-    async show(href) {
-        if (!this.pages.has(href)) {
-            await this.load(href);
+    async show(link) {
+        if (!this.pages.has(link)) {
+            await this.load(link);
         }
-        const body = this.pages.get(href).querySelector('body');
-        this.document.body.innerHTML = body.innerHTML;
-        console.debug('Showing', href)
+        const html = this.pages.get(link);
+        const body = html.querySelector('body');
+        const title = html.querySelector('head title');
+        
+        this.document.querySelector('head title').innerText = (title && title.innerText) || '';
+        this.document.querySelector('body').innerHTML = body.innerHTML;
+                
+        console.debug('Shown', link, title);
+    }
+    add(link, document) {
+        if (!this.pages.has(link)) {
+            this.pages.set(link, document);
+            console.debug('Loaded', link, document.querySelector('head title'));
+        }
     }
 }
