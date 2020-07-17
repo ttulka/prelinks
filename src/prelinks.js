@@ -1,8 +1,11 @@
+import PageLoader from "./loader";
+
 export default class PreLinks {
-    constructor(document, loader, history, progressMethods) {
+    constructor(document, cache, history, progressMethods) {
         this.document = document;
-        this.loader = loader;
+        this.cache = cache;
         this.history = history;
+        this.loader = new PageLoader(document);
         this.anchors = [];
 
         const progressMethodId = this._progressMethodIdFromHead(document);
@@ -30,7 +33,7 @@ export default class PreLinks {
 
         this.history.addEventListener('popped', this._onHistoryPoppedEvent);
 
-        this.loader.add(link, this.document);
+        this.cache.put(link, this.document);
 
         console.debug('Prelinks initialized.');
     }
@@ -46,7 +49,8 @@ export default class PreLinks {
     }
     showLink(link) {
         this.showProgress();
-        this.loader.show(link)
+        this.cache.page(link)
+            .then(p => this.loader.show(p))
             .then(_ => {
                 this._destroy();
                 this._init(link);
@@ -55,7 +59,7 @@ export default class PreLinks {
             .catch(err => console.error('Cannot show the page.', link, err));
     }
     loadLink(link) {
-        this.loader.load(link)
+        this.cache.load(link)
             .catch(err => console.error('Cannot load the page.', link, err));
     }
     showProgress() {
