@@ -1,7 +1,7 @@
 import PreLinks from './prelinks.js';
 import LinksHistory from './history.js';
 import ProgressMethod from './progress.js';
-import { PageCache, NoCache } from './cache.js';
+import PageCache from './cache.js';
 
 (function () {
     const progressMethods = [
@@ -10,10 +10,9 @@ import { PageCache, NoCache } from './cache.js';
 
     const prelinks = new PreLinks(
         window.document,
-        settingValue('cache-control') !== 'no-cache'
-            ? new PageCache(
-                settingValue('cache-limit'))
-            : new NoCache(),
+        new PageCache(
+            settingValue('cache-limit'),
+            settingValue('cache-control') === 'no-cache'),
         new LinksHistory(
             window,
             window.history),

@@ -71,7 +71,7 @@ export default class PreLinks {
         }
     }
     _onClickEvent(e) {
-        if (e.target.getAttribute('data-prelink') !== 'false') {
+        if (e.target.getAttribute('data-prelinks') !== 'false') {
             e.preventDefault();
             const link = e.target.href;
             if (link) {
@@ -82,11 +82,11 @@ export default class PreLinks {
         }
     }
     _onMouseenterEvent(e) {
-        if (e.target.getAttribute('data-prelink') !== 'false') {
+        if (e.target.getAttribute('data-prelinks') !== 'false') {
             const link = e.target.href;
             if (link) {
                 console.debug('Link entered', link);
-                const force = e.target.getAttribute('data-prelink-cache') === 'false';
+                const force = e.target.getAttribute('data-prelinks-cache') === 'false';
                 this.loadLink(link, force);
             }
         }

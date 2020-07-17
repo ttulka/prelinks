@@ -27,18 +27,18 @@ npm i
 
 ### Disable prelinks for a link
 
-To disable prelinks on a particular link, add the attribute `data-prelink="false"`:
+To disable prelinks on a particular link, add the attribute `data-prelinks="false"`:
 
 ```html
-<a href="..." data-prelink="false">...</a>
+<a href="..." data-prelinks="false">...</a>
 ```
 
 ### Disable caching for a link
 
-To disable caching for a particular link, add the attribute `data-prelink-cache="false"`:
+To disable caching for a particular link, add the attribute `data-prelinks-cache="false"`:
 
 ```html
-<a href="..." data-prelink-cache="false">...</a>
+<a href="..." data-prelinks-cache="false">...</a>
 ```
 
 ### Progress action

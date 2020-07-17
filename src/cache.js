@@ -1,13 +1,14 @@
-export class PageCache {
-    constructor(limit) {
+export default class PageCache {
+    constructor(limit, alwaysForce = false) {
         this.cache = new LmitedPageCache(limit && limit > 1 ? limit : 10);
+        this.alwaysForce = !!alwaysForce;
         this.loading = new Set();
 
         console.debug('PageCache constructed.');
     }
     async load(link, force = false) {
         let cache = this.cache;
-        if (force || !this.loading.has(link) && !cache.has(link)) {
+        if (force || this.alwaysForce || !this.loading.has(link) && !cache.has(link)) {
             this.loading.add(link);
 
             const html = await htmlPage(link);
@@ -44,20 +45,6 @@ export class PageCache {
     _forceLoad(page) {
         const meta = page.querySelector('head meta[name="prelinks-cache-control"]');
         return meta && meta.getAttribute('content') === 'no-cache';
-    }
-}
-
-export class NoCache {
-    async page(link) {
-        const page = await htmlPage(link);
-        console.debug('Loaded', link);
-        return page;
-    }
-    async load(link, force) {
-        console.debug('No cache.');
-    }
-    put(link, document) {
-        console.debug('No cache.');
     }
 }
 
