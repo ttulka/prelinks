@@ -1,15 +1,13 @@
 import PageLoader from "./loader";
 
 export default class PreLinks {
-    constructor(document, cache, history, progressMethods) {
+    constructor(document, cache, history, progressMethod) {
         this.document = document;
         this.cache = cache;
         this.history = history;
+        this.progressMethod = progressMethod;
         this.loader = new PageLoader(document);
         this.anchors = [];
-
-        const progressMethodId = this._progressMethodIdFromHead(document);
-        this.progressMethod = progressMethods.find(({ id }) => id === progressMethodId);
 
         this._onClickEvent = this._onClickEvent.bind(this);
         this._onMouseenterEvent = this._onMouseenterEvent.bind(this);
@@ -58,8 +56,8 @@ export default class PreLinks {
             })
             .catch(err => console.error('Cannot show the page.', link, err));
     }
-    loadLink(link) {
-        this.cache.load(link)
+    loadLink(link, force = false) {
+        this.cache.load(link, force)
             .catch(err => console.error('Cannot load the page.', link, err));
     }
     showProgress() {
@@ -88,7 +86,8 @@ export default class PreLinks {
             const link = e.target.href;
             if (link) {
                 console.debug('Link entered', link);
-                this.loadLink(link);
+                const force = e.target.getAttribute('data-prelink-cache') === 'false';
+                this.loadLink(link, force);
             }
         }
     }
@@ -98,9 +97,5 @@ export default class PreLinks {
             console.debug('Link popped', link);
             this.showLink(link);
         }
-    }
-    _progressMethodIdFromHead() {
-        const progressMeta = this.document.querySelector('head meta[name="prelinks-progress"]');
-        return progressMeta ? progressMeta.getAttribute('content') : 'none';
     }
 }

@@ -1,18 +1,31 @@
 import PreLinks from './prelinks.js';
 import LinksHistory from './history.js';
 import ProgressMethod from './progress.js';
-import PageCache from './cache.js';
+import { PageCache, NoCache } from './cache.js';
 
 (function () {
+    const progressMethods = [
+        new ProgressMethod('blur', 'filter', 'blur(1rem)')
+    ];
+
     const prelinks = new PreLinks(
         window.document,
-        new PageCache(window.document),
+        settingValue('cache-control') !== 'no-cache'
+            ? new PageCache(
+                settingValue('cache-limit'))
+            : new NoCache(),
         new LinksHistory(
             window,
             window.history),
-        [new ProgressMethod('blur', 'filter', 'blur(1rem)')]);
+        progressMethods.find(({ id }) => id === settingValue('progress', 'none'))
+    );
 
     prelinks.start(window.location.href);
 
     window.addEventListener('unload', _ => prelinks.stop());
+
+    function settingValue(name, def = null) {
+        const meta = window.document.querySelector(`head meta[name="prelinks-${name}"]`);
+        return meta && meta.getAttribute('content') || def;
+    }
 })();
