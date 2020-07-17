@@ -14,13 +14,13 @@ export default class LinksHistory extends EventTarget {
     stop() {
         window.removeEventListener('popstate', this._onPopstateEvent);
     }
+    push(link) {
+        this.history.pushState(link, link, link);
+        console.debug('Link pushed to history', link);
+    }
     _onPopstateEvent(e) {
         if (e.state) {
             this.dispatchEvent(new CustomEvent('popped', { detail: e.state }));
         }
-    }
-    push(link) {
-        this.history.pushState(link, link, link);
-        console.debug('Link pushed to history', link);
     }
 }

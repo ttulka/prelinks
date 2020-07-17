@@ -1,21 +1,18 @@
 import PreLinks from './prelinks.js';
 import PageLoader from './loader.js';
 import LinksHistory from './history.js';
+import ProgressMethod from './progress.js';
 
 (function () {
-    const history = new LinksHistory(
-        window,
-        window.history);
     const prelinks = new PreLinks(
         window.document,
         new PageLoader(window.document),
-        history);
+        new LinksHistory(
+            window,
+            window.history),
+        [new ProgressMethod('blur', 'filter', 'blur(1rem)')]);
 
-    prelinks.init(window.location.href);
-    history.start(window.location.href);
+    prelinks.start(window.location.href);
 
-    window.addEventListener('unload', e => {
-        prelinks.destroy();
-        history.stop();
-    });
+    window.addEventListener('unload', _ => prelinks.stop());
 })();

@@ -1,17 +1,27 @@
 export default class PreLinks {
-    constructor(document, loader, history) {
+    constructor(document, loader, history, progressMethods) {
         this.document = document;
         this.loader = loader;
         this.history = history;
         this.anchors = [];
 
+        const progressMethodId = this._progressMethodIdFromHead(document);
+        this.progressMethod = progressMethods.find(({ id }) => id === progressMethodId);
+
         this._onClickEvent = this._onClickEvent.bind(this);
         this._onMouseenterEvent = this._onMouseenterEvent.bind(this);
         this._onHistoryPoppedEvent = this._onHistoryPoppedEvent.bind(this);
-        
+
         console.debug('PreLinks constructed.');
     }
-    init(currentUrl) {
+    start(currentUrl) {
+        this.history.start(currentUrl);
+        this._init(currentUrl);
+    }
+    stop() {
+        this._destroy();
+    }
+    _init(link) {
         document.querySelectorAll('a').forEach(a => {
             this.anchors.push(a);
             a.addEventListener('click', this._onClickEvent);
@@ -19,12 +29,12 @@ export default class PreLinks {
         });
 
         this.history.addEventListener('popped', this._onHistoryPoppedEvent);
-        
-        this.loader.add(currentUrl, this.document);
-                
+
+        this.loader.add(link, this.document);
+
         console.debug('Prelinks initialized.');
     }
-    destroy() {        
+    _destroy() {
         this.anchors.forEach(a => {
             a.removeEventListener('click', this._onClickEvent);
             a.removeEventListener('mouseenter', this._onMouseenterEvent)
@@ -34,39 +44,59 @@ export default class PreLinks {
 
         console.debug('Prelinks destroyed.');
     }
-    _showLink(link) {
+    showLink(link) {
+        this.showProgress();
         this.loader.show(link)
             .then(_ => {
-                this.destroy();
-                this.init(link);
+                this._destroy();
+                this._init(link);
+                this.hideProgress();
             })
             .catch(err => console.error('Cannot show the page.', link, err));
     }
-    _loadLink(link) {
+    loadLink(link) {
         this.loader.load(link)
             .catch(err => console.error('Cannot load the page.', link, err));
     }
+    showProgress() {
+        if (this.progressMethod) {
+            this.progressMethod.show(this.document);
+        }
+    }
+    hideProgress() {
+        if (this.progressMethod) {
+            this.progressMethod.hide(this.document);
+        }
+    }
     _onClickEvent(e) {
-        e.preventDefault();
-        const link = e.target.href;
-        if (link) {            
-            console.debug('Link clicked', link);
-            this.history.push(link);
-            this._showLink(link);
+        if (e.target.getAttribute('data-prelink') !== 'false') {
+            e.preventDefault();
+            const link = e.target.href;
+            if (link) {
+                console.debug('Link clicked', link);
+                this.history.push(link);
+                this.showLink(link);
+            }
         }
     }
     _onMouseenterEvent(e) {
-        const link = e.target.href;
-        if (link) {
-            console.debug('Link entered', link);
-            this._loadLink(link);
+        if (e.target.getAttribute('data-prelink') !== 'false') {
+            const link = e.target.href;
+            if (link) {
+                console.debug('Link entered', link);
+                this.loadLink(link);
+            }
         }
     }
     _onHistoryPoppedEvent(e) {
         const link = e.detail;
         if (link) {
             console.debug('Link popped', link);
-            this._showLink(link);     
+            this.showLink(link);
         }
+    }
+    _progressMethodIdFromHead() {
+        const progressMeta = this.document.querySelector('head meta[name="prelinks-progress"]');
+        return progressMeta ? progressMeta.getAttribute('content') : 'none';
     }
 }

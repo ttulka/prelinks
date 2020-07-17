@@ -5,8 +5,8 @@ export default class PageLoader {
         this.loading = new Set();
         console.debug('PageLoader constructed.');
     }
-    async load(link) {
-        if (!this.loading.has(link) && !this.pages.has(link)) {
+    async load(link, force = false) {
+        if (force || !this.loading.has(link) && !this.pages.has(link)) {
             this.loading.add(link);
 
             const html = await fetch(link)
@@ -23,16 +23,21 @@ export default class PageLoader {
         if (!this.pages.has(link)) {
             await this.load(link);
         }
+        if (this._forceLoad(this.pages.get(link))) {
+            await this.load(link, true);
+        }
         const page = this.pages.get(link).cloneNode(true);
         const body = page.querySelector('body');
         const head = page.querySelector('head');
 
         this.document.querySelector('head').innerHTML = head.innerHTML;
-            
+
         const pageBody = this.document.querySelector('body');
         pageBody.innerHTML = body.innerHTML;
 
         pageBody.querySelectorAll('script').forEach(s => s.parentNode.replaceChild(this._scriptElement(s), s));
+
+        
 
         console.debug('Shown', link);
     }
@@ -56,5 +61,9 @@ export default class PageLoader {
         for (const { name, value } of src.attributes) {
             dest.setAttribute(name, value)
         }
+    }
+    _forceLoad(page) {
+        const meta = page.querySelector('head meta[name="prelinks-cache-control"]');
+        return meta && meta.getAttribute('content') === 'no-cache';
     }
 }
