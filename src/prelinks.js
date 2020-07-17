@@ -1,4 +1,4 @@
-import PageLoader from "./loader";
+import ShowPage from "./show";
 
 export default class PreLinks {
     constructor(document, cache, history, progressMethod) {
@@ -6,7 +6,7 @@ export default class PreLinks {
         this.cache = cache;
         this.history = history;
         this.progressMethod = progressMethod;
-        this.loader = new PageLoader(document);
+        this.showPage = new ShowPage(document);
         this.anchors = [];
 
         this._onClickEvent = this._onClickEvent.bind(this);
@@ -48,7 +48,7 @@ export default class PreLinks {
     showLink(link) {
         this.showProgress();
         this.cache.page(link)
-            .then(p => this.loader.show(p))
+            .then(p => this.showPage.show(p))
             .then(_ => {
                 this._destroy();
                 this._init(link);

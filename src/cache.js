@@ -12,7 +12,7 @@ export default class PageCache {
             this.loading.add(link);
 
             const html = await htmlPage(link);
-            
+
             cache = cache.put(link, html);
             this.cache = cache;
 
@@ -29,7 +29,7 @@ export default class PageCache {
         let cache = this.cache;
         if (!this.cache.has(link)) {
             cache = await this.load(link);
-        
+
         } else if (this._forceLoad(this.cache.get(link))) {
             cache = await this.load(link, true);
         }
