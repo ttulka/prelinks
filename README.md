@@ -2,15 +2,7 @@
 
 This simple plugin loads and caches pages when the user shows a mere intention to visit a link (she moves the cursor over the link).
 
-That results in a very quick navigating among pages, lower load, and great user experience.
-
-## Usage
-
-Put the script to the bottom of `<body>` into each HTML page:
-
-```html
-<script src="prelinks.min.js" type="module" id="prelinks" defer></script>
-```
+That results in a very quick navigating among pages, lower load, and better user experience.
 
 ## Demo
 
@@ -23,9 +15,17 @@ npm i
 ./node_modules/.bin/rollup -c
 ```
 
-## Advanced
+## Usage
 
-### Disable prelinks for a link
+Put the script to the bottom of `<body>` into each HTML page:
+
+```html
+<script src="prelinks.min.js" type="module" id="prelinks" defer></script>
+```
+
+### Settings
+
+#### Disable prelinks for a link
 
 To disable prelinks on a particular link, add the attribute `data-prelinks="false"`:
 
@@ -33,7 +33,7 @@ To disable prelinks on a particular link, add the attribute `data-prelinks="fals
 <a href="..." data-prelinks="false">...</a>
 ```
 
-### Disable caching for a link
+#### Disable caching for a link
 
 To disable caching for a particular link, add the attribute `data-prelinks-cache="false"`:
 
@@ -41,7 +41,7 @@ To disable caching for a particular link, add the attribute `data-prelinks-cache
 <a href="..." data-prelinks-cache="false">...</a>
 ```
 
-### Progress action
+#### Progress action
 
 To enable an action for loading a page, put a meta tag `prelinks-progress` into `<head>`:
 
@@ -56,7 +56,7 @@ Possible values for `content` are:
 - `blur`
   - blur page
 
-### Disable all caching
+#### Disable all caching
 
 To disable caching completelly, put a meta tag `prelinks-cache-control` with `content="no-cache"` into `<head>`:
 

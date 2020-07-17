@@ -1,7 +1,7 @@
 import PreLinks from './prelinks.js';
+import PageCache from './cache.js';
 import LinksHistory from './history.js';
 import ProgressMethod from './progress.js';
-import PageCache from './cache.js';
 
 (function () {
     const progressMethods = [
