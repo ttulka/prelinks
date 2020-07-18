@@ -1,8 +1,16 @@
 # PreLinks - cached before clicked
 
-This simple plugin loads and caches pages when the user shows a mere intention to visit a link (she moves the cursor over the link).
+This simple plugin loads and caches pages when the user shows a mere *intention to visit a link* - she just moves the cursor over the link and the target page is cached.
 
-That results in a very quick navigating among pages, lower load, and better user experience.
+That results in a very **quick navigating** among pages, **lower load**, and **better user experience**.
+
+Once cached switching between links is super quick, the HTTP request is performed only once.
+
+HTML head elements are merged, scripts are executed.
+
+Small and easy to use.
+
+Best fit for server-side rendered websites. 
 
 ## Demo
 
