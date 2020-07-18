@@ -8,7 +8,7 @@ Once cached switching between links is super quick, the HTTP request is performe
 
 HTML head elements are merged, scripts are executed.
 
-Small and easy to use.
+Small (6 KB) and easy to use.
 
 Best fit for server-side rendered websites. 
 

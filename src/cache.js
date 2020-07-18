@@ -53,7 +53,7 @@ export default class PageCache extends EventTarget {
     }
     put(link, document) {
         const cache = this.cache;
-        if (!cache.has(link)) {
+        if (!cache.has(link) && !this.loading.has(link)) {
             this.cache = cache.put(link, document.cloneNode(true));
             console.debug('Loaded', link);
         }
