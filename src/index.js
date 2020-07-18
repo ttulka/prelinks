@@ -5,7 +5,7 @@ import ProgressMethod from './progress.js';
 
 (function () {
     const progressMethods = [
-        new ProgressMethod('blur', 'filter', 'blur(1rem)')
+        new ProgressMethod('blur', 'filter', 'blur(.5rem)')
     ];
 
     const prelinks = new PreLinks(

@@ -9,47 +9,44 @@ export default class PageCache extends EventTarget {
     }
     async load(link, force = false) {
         let cache = this.cache;
-        if (this.loading.has(link)) {
-            return cache;
-        }
-        if (force || this.alwaysForce || !cache.has(link)) {
-            this.loading.add(link);
+        let hit = false;
+        if (!this.loading.has(link)) {
+            if (force || this.alwaysForce || !cache.has(link)) {
+                this.loading.add(link);
+                try {
+                    const page = await htmlPage(link);
 
-            const page = await htmlPage(link);
+                    cache = cache.put(link, page);
+                    this.cache = cache;
 
-            cache = cache.put(link, page);
-            this.cache = cache;
-
-            this.loading.delete(link);
-            this.dispatchEvent(new CustomEvent('loaded', { detail: { link, page } }));
-
-            console.debug('Loaded', link);
-
+                    console.debug('Loaded', link);
+                } finally {
+                    this.loading.delete(link);
+                }
+            } else {
+                hit = true;
+            }
+            this.dispatchEvent(new CustomEvent(
+                'loaded', { detail: { link, page: cache.get(link) } }));
         } else {
+            hit = true;
+        }
+        if (hit) {
             cache.hit(link);
         }
-        return cache;
     }
     async page(link) {
         const onPageLoaded = new Promise(resolve => {
             const listener = ({ detail }) => {
                 if (detail.link === link) {
                     this.removeEventListener('loaded', listener);
-                    resolve(detail.page);
+                    resolve(detail.page.cloneNode(true));
                 }
             }
             this.addEventListener('loaded', listener, false);
         });
-
-        if (this.loading.has(link)) {
-            return onPageLoaded;
-        }
-        const cache = this.cache;
-        if (!cache.has(link)) {
-            this.load(link);
-            return onPageLoaded;
-        }
-        return cache.get(link).cloneNode(true);
+        await this.load(link);
+        return onPageLoaded;
     }
     put(link, document) {
         const cache = this.cache;
