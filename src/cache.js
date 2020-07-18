@@ -1,5 +1,6 @@
-export default class PageCache {
+export default class PageCache extends EventTarget {
     constructor(limit, alwaysForce = false) {
+        super();
         this.cache = new LmitedPageCache(limit && limit > 1 ? limit : 10);
         this.alwaysForce = !!alwaysForce;
         this.loading = new Set();
@@ -8,15 +9,19 @@ export default class PageCache {
     }
     async load(link, force = false) {
         let cache = this.cache;
-        if (force || this.alwaysForce || !this.loading.has(link) && !cache.has(link)) {
+        if (this.loading.has(link)) {
+            return cache;
+        }
+        if (force || this.alwaysForce || !cache.has(link)) {
             this.loading.add(link);
 
-            const html = await htmlPage(link);
+            const page = await htmlPage(link);
 
-            cache = cache.put(link, html);
+            cache = cache.put(link, page);
             this.cache = cache;
 
             this.loading.delete(link);
+            this.dispatchEvent(new CustomEvent('loaded', { detail: { link, page } }));
 
             console.debug('Loaded', link);
 
@@ -26,12 +31,23 @@ export default class PageCache {
         return cache;
     }
     async page(link) {
-        let cache = this.cache;
-        if (!this.cache.has(link)) {
-            cache = await this.load(link);
+        const onPageLoaded = new Promise(resolve => {
+            const listener = ({ detail }) => {
+                if (detail.link === link) {
+                    this.removeEventListener('loaded', listener);
+                    resolve(detail.page);
+                }
+            }
+            this.addEventListener('loaded', listener, false);
+        });
 
-        } else if (this._forceLoad(this.cache.get(link))) {
-            cache = await this.load(link, true);
+        if (this.loading.has(link)) {
+            return onPageLoaded;
+        }
+        const cache = this.cache;
+        if (!cache.has(link)) {
+            this.load(link);
+            return onPageLoaded;
         }
         return cache.get(link).cloneNode(true);
     }
@@ -41,10 +57,6 @@ export default class PageCache {
             this.cache = cache.put(link, document.cloneNode(true));
             console.debug('Loaded', link);
         }
-    }
-    _forceLoad(page) {
-        const meta = page.querySelector('head meta[name="prelinks-cache-control"]');
-        return meta && meta.getAttribute('content') === 'no-cache';
     }
 }
 
