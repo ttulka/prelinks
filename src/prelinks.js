@@ -8,6 +8,7 @@ export default class PreLinks {
         this.progressMethod = progressMethod;
         this.showPage = new ShowPage(document);
         this.anchors = [];
+        this.noEnterEvent = false;
 
         this._onClickEvent = this._onClickEvent.bind(this);
         this._onMouseenterEvent = this._onMouseenterEvent.bind(this);
@@ -18,6 +19,8 @@ export default class PreLinks {
     start(currentUrl) {
         this.history.start(currentUrl);
         this._init(currentUrl);
+
+        //window.addEventListener('touchstart', _ => this.noEnterEvent = true);
     }
     stop() {
         this._destroy();
@@ -46,6 +49,7 @@ export default class PreLinks {
         console.debug('Prelinks destroyed.');
     }
     showLink(link) {
+        console.log('@ showLink', link)
         this.showProgress();
         this.cache.page(link)
             .then(p => this.showPage.show(p))
@@ -57,6 +61,7 @@ export default class PreLinks {
             .catch(err => console.error('Cannot show the page.', link, err));
     }
     loadLink(link, force = false) {
+        console.log('@ loadLink', link, force)
         this.cache.load(link, force)
             .catch(err => console.error('Cannot load the page.', link, err));
     }
@@ -82,6 +87,9 @@ export default class PreLinks {
         }
     }
     _onMouseenterEvent(e) {
+        if (this.noEnterEvent) {
+            return;
+        }
         if (e.target.getAttribute('data-prelinks') !== 'false') {
             const link = e.target.href;
             if (link) {
