@@ -11,6 +11,7 @@ import ProgressMethod from './progress.js';
     const prelinks = new PreLinks(
         window.document,
         new PageCache(
+            htmlPage,
             settingValue('cache-limit'),
             settingValue('cache-control') === 'no-cache'),
         new LinksHistory(
@@ -26,5 +27,11 @@ import ProgressMethod from './progress.js';
     function settingValue(name, def = null) {
         const meta = window.document.querySelector(`head meta[name="prelinks-${name}"]`);
         return meta && meta.getAttribute('content') || def;
+    }
+
+    function htmlPage(link) {
+        return fetch(link)
+            .then(r => r.text())
+            .then(r => new DOMParser().parseFromString(r, 'text/html'))
     }
 })();

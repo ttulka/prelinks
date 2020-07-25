@@ -1,6 +1,7 @@
 export default class PageCache extends EventTarget {
-    constructor(limit, alwaysForce = false) {
+    constructor(loadPageFn, limit, alwaysForce = false) {
         super();
+        this.loadPageFn = loadPageFn;
         this.cache = new LmitedPageCache(limit && limit > 1 ? limit : 10);
         this.alwaysForce = !!alwaysForce;
         this.loading = new Set();
@@ -14,7 +15,7 @@ export default class PageCache extends EventTarget {
             if (force || this.alwaysForce || !cache.has(link)) {
                 this.loading.add(link);
                 try {
-                    const page = await htmlPage(link);
+                    const page = await this.loadPageFn(link);
 
                     cache = cache.put(link, page);
                     this.cache = cache;
@@ -103,10 +104,4 @@ class LmitedPageCache {
             }
         }
     }
-}
-
-function htmlPage(link) {
-    return fetch(link)
-        .then(r => r.text())
-        .then(r => new DOMParser().parseFromString(r, 'text/html'))
 }
