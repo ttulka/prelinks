@@ -28,7 +28,7 @@ npm i
 Put the script to the bottom of `<body>` into each HTML page:
 
 ```html
-<script src="prelinks.min.js" type="module" id="prelinks" defer></script>
+<script src="prelinks.min.js" id="prelinks" defer></script>
 ```
 
 ### Settings
