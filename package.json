@@ -1,7 +1,7 @@
 {
   "name": "prelinks",
   "version": "1.0.0",
-  "description": "This simple plugin will load and cache pages right when the user shows a mere intention to visit a link (move the cursor upon the link).",
+  "description": "Eager caching for web pages.",
   "main": "src/index.js",
   "dependencies": {},
   "devDependencies": {
@@ -18,7 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/ttulka/prelinks.git"
   },
-  "author": "Tomas Tulka (ttulka)",
+  "author": "Tomas Tulka <dev@ttulka.com> (https://ttulka.com)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/ttulka/prelinks/issues"
