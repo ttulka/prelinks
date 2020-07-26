@@ -2,6 +2,7 @@
   "name": "prelinks",
   "version": "1.0.0",
   "description": "Eager caching for web pages.",
+  "keywords": ["prelinks", "web", "links", "caching", "speedup", "ux"],
   "main": "src/index.js",
   "dependencies": {},
   "devDependencies": {
