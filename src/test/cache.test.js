@@ -94,6 +94,16 @@ describe('PageCache', () => {
 
             assert.equal(mock.attempts(), 1);
         });
+
+        it('always load when always forced', async () => {
+            const mock = pageMock(PAGE);
+            const cache = new PageCache(mock.load, 99, true);
+            cache.put(LINK1, PAGE);
+            
+            await cache.load(LINK1);
+
+            assert.equal(mock.attempts(), 1);
+        });
     });
 
     describe('page', () => {

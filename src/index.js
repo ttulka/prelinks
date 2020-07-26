@@ -1,6 +1,7 @@
 import PreLinks from './prelinks.js';
 import PageCache from './cache.js';
 import LinksHistory from './history.js';
+import ShowPage from "./show.js";
 import ProgressMethod from './progress.js';
 
 (function () {
@@ -17,6 +18,7 @@ import ProgressMethod from './progress.js';
         new LinksHistory(
             window,
             window.history),
+        new ShowPage(window.document),
         progressMethods.find(({ id }) => id === settingValue('progress', 'none'))
     );
 
