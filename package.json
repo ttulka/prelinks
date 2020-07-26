@@ -11,7 +11,8 @@
     "rollup-plugin-terser": "^6.1.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bundle": "rollup -c",
+    "test": "echo \"Run tests in browser: src/test/index.html\" && exit 1"
   },
   "repository": {
     "type": "git",

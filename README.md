@@ -22,8 +22,8 @@ Best fit for server-side rendered websites.
 ## Build
 
 ```sh
-npm i
-./node_modules/.bin/rollup -c
+npm install
+npm run bundle
 ```
 
 ## Usage
