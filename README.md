@@ -1,6 +1,9 @@
-# PreLinks - cached before clicked
+# PreLinks - eager caching for web pages
 
-This simple plugin loads and caches pages when the user shows a mere *intention to visit a link* - she just moves the cursor over the link and the target page is cached.
+- Cached before even visited!
+- TurboLinks on steroids :-)
+
+This simple plugin loads and caches pages when the user shows a mere *intention to visit a link* - she just moves the cursor over the link and the target page is cached immediatelly.
 
 That results in a very **quick navigating** among pages, **lower load**, and **better user experience**.
 
