@@ -1,12 +1,11 @@
-import ShowPage from "./show";
 
 export default class PreLinks {
-    constructor(document, cache, history, progressMethod) {
+    constructor(document, cache, history, showPage, progressMethod) {
         this.document = document;
         this.cache = cache;
         this.history = history;
+        this.showPage = showPage;
         this.progressMethod = progressMethod;
-        this.showPage = new ShowPage(document);
         this.anchors = [];
 
         this._onClickEvent = this._onClickEvent.bind(this);
@@ -23,7 +22,7 @@ export default class PreLinks {
         this._destroy();
     }
     _init(link) {
-        document.querySelectorAll('a').forEach(a => {
+        this.document.querySelectorAll('a').forEach(a => {
             this.anchors.push(a);
             a.addEventListener('click', this._onClickEvent);
             a.addEventListener('mouseenter', this._onMouseenterEvent)
@@ -65,7 +64,7 @@ export default class PreLinks {
             this.progressMethod.show(this.document);
         }
     }
-    hideProgress() {
+    hideProgress() { 
         if (this.progressMethod) {
             this.progressMethod.hide(this.document);
         }
