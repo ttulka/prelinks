@@ -12,6 +12,7 @@
   },
   "scripts": {
     "bundle": "rollup -c",
+    "zip": "zip -oj bundle.zip bundle/*",
     "test": "echo \"Run tests in browser: src/test/index.html\" && exit 1"
   },
   "repository": {
